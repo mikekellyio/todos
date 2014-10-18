@@ -10,11 +10,15 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-theme.min.css" rel="stylesheet">
     <style>
-      .todo input {
+      #todo-template {
+        display:none;
+      }
+      .todo .todo-value {
         display: none;
       }
-      .todo.editing input {
-        display: block;
+      .todo.editing .todo-value {
+        display: inline-block;
+        width:80%;
       }
       .todo.editing .todo-text {
         display: none;
@@ -35,11 +39,13 @@
       </div>
       <form id="todo_form">
         <ul class="list-group todos">
-          <li class="list-group-item todo">
+          <li id="todo-template" class="list-group-item todo">
+            <input type="checkbox" class="todo-done">
             <span class="todo-text">Click to enter your todo</span>
-            <input type="text" class="form-control" placeholder="Enter your todo">
+            <input type="text" class="form-control todo-value" placeholder="Enter your todo">
           </li>
         </ul>
+        <a href='#' class="todo-add btn btn-success">Add</a>
       </form>
     </div>
 
@@ -49,11 +55,11 @@
     <script src="js/bootstrap.min.js"></script>
 
     <script>
-      $('.todo-text').on('click', function(){
+      $('.todos').on('click', '.todo-text', function(){
         $(this).parent().addClass("editing")
         $(this).parent().children("input").focus()
       })
-      $('.todo input').on('change', function(){
+      $('.todos').on('change', '.todo-value', function(){
         var updated = "Click to enter your todo"
         if(this.value != "") {
           updated = this.value
@@ -61,8 +67,15 @@
         
         $(this).parent().children(".todo-text").html(updated)
       })
-      $('.todo input').on('blur', function(){
+      $('.todos').on('blur', '.todo-value', function(){
         $(this).parent().removeClass("editing")
+      })
+      $('.todo-add').on('click', function(e){
+        e.preventDefault()
+
+        var todo = $('#todo-template').clone()
+        todo.attr('id', '')
+        $('.todos').append(todo)
       })
     </script
   </body>
