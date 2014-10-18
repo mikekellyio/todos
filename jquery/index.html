@@ -23,6 +23,9 @@
       .todo.editing .todo-text {
         display: none;
       }
+      .todo.done .todo-text {
+        text-decoration: line-through;
+      }
     </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -69,6 +72,9 @@
       })
       $('.todos').on('blur', '.todo-value', function(){
         $(this).parent().removeClass("editing")
+      })
+      $('.todos').on('change', '.todo-done', function(){
+        $(this).parent().toggleClass('done')
       })
       $('.todo-add').on('click', function(e){
         e.preventDefault()
