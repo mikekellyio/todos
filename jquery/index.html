@@ -18,9 +18,11 @@
       }
       .todo.editing .todo-value {
         display: inline-block;
-        width:80%;
       }
       .todo.editing .todo-text {
+        display: none;
+      }
+      .todo.editing .todo-done {
         display: none;
       }
       .todo.done .todo-text {
@@ -48,14 +50,20 @@
             <input type="text" class="form-control todo-value" placeholder="Enter your todo">
           </li>
         </ul>
+        <p class="todo-status"></p>
         <a href='#' class="todo-add btn btn-success">Add</a>
       </form>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+
+    <script id="status-template" type="text/x-handlebars-template">
+    {{ done }} completed out of {{ total }} items
+    </script>
 
     <script>
       $('.todos').on('click', '.todo-text', function(){
@@ -75,6 +83,21 @@
       })
       $('.todos').on('change', '.todo-done', function(){
         $(this).parent().toggleClass('done')
+        $(this).trigger("todo-update")
+      })
+      
+      $('.todos').on('todo-update', function(){
+        console.log('todo:update')
+        var done = $('.todos li.done').size() 
+        var total = $('.todos li').not('#todo-template').size() 
+        var source   = $("#status-template").html();
+        var status = Handlebars.compile(source);
+        
+        $('.todo-status').html(status({
+          'done': done,
+          'total': total
+        }))
+
       })
       $('.todo-add').on('click', function(e){
         e.preventDefault()
@@ -82,6 +105,8 @@
         var todo = $('#todo-template').clone()
         todo.attr('id', '')
         $('.todos').append(todo)
+                   .trigger("todo-update")
+
       })
     </script
   </body>
